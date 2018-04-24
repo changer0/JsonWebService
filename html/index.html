@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,9 +8,10 @@
 	<link rel="stylesheet" href="libs/bootstrap/css/bootstrap.css">
 	<title>demo</title>
 	<script src="libs/vue/vue.js"></script>
+	<script src="libs/vue/vue-resource.js"></script>
 
 	<style>
-		.container{
+		.container {
 			border: 1px solid #000;
 			background-color: #eee;
 			border-radius: 5px;
@@ -17,41 +19,43 @@
 			padding-bottom: 10px;
 		}
 
-		.fl{
+		.fl {
 			margin-right: 50px;
 		}
-		.control{
+
+		.control {
 			margin-bottom: 20px;
 		}
-		.btn-primary{
+
+		.btn-primary {
 			margin-top: 20px;
 		}
-
 	</style>
 </head>
+
 <body>
 	<div class="container">
 		<form>
-		  <div class="form-group">
-		    <label for="keyInfo">请输入key:</label>
-		    <input type="text" class="form-control" id="keyInfo" placeholder="key" v-model="keyInfo">
-		  </div>
+			<div class="form-group">
+				<label for="keyInfo">请输入key:</label>
+				<input type="text" class="form-control" id="keyInfo" placeholder="key" v-model="keyInfo">
+			</div>
 		</form>
 
 		<div class="json-info">
 			<div class="form-group">
-			    <label for="jsonInfo">请输入Json串:</label>
-			    <textarea id="jsonInfo" class="form-control" rows="3" v-model="jsonInfo"></textarea>
-		  	</div>
+				<label for="jsonInfo">请输入Json串:</label>
+				<textarea id="jsonInfo" class="form-control" rows="3" v-model="jsonInfo"></textarea>
+			</div>
 			<div class="control">
-				<button type="button" class="btn btn-success fl"s>提交</button>
+				<button type="button" class="btn btn-success fl" @click="submitJsonInfo">提交</button>
 				<button type="button" class="btn btn-danger fr">清空</button>
 			</div>
 		</div>
 
 		<div class="form-group">
-			    <label for="keyInfo">请访问下方地址获得数据:</label>
-			    <a href="{{url}}" class="btn btn-default btn-lg active btn-block" role="button">{{url}}</a>
+			<label for="keyInfo">请访问下方地址获得数据:</label>
+			<a href="{{url}}" class="btn btn-default btn-lg active btn-block" role="button">{{url}}</a>
 		</div>
 
 		<button type="button" class="btn btn-primary btn-lg" @click="clearDatabase">清空数据库</button>
@@ -59,22 +63,31 @@
 
 
 	<script src="libs/jQuery/jquery-3.3.1.js"></script>
-    <script src="libs/bootstrap/js/bootstrap.min.js"></script>
+	<script src="libs/bootstrap/js/bootstrap.min.js"></script>
 	<script>
 		new Vue({
 			el: ".container",
 			data: {
-				keyInfo: "key--key",
+				keyInfo: "测试测试",
 				url: "www.baidu.com",
 				jsonInfo: "jsonInfo"
 			},
 			methods: {
-				clearDatabase(){
+				clearDatabase() {
 					alert("清空");
+				},
+				submitJsonInfo: function (ev) {
+					this.$http.get('http://127.0.0.1:8765?key=test')
+						.then(function (res) {
+							alert(res.data);
+						}, function (err) {
+							alert("添加失败!" + JSON.stringify(err));
+						});
 				},
 
 			}
 		});
 	</script>
 </body>
+
 </html>

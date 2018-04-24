@@ -10,6 +10,11 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 var url = "mongodb://127.0.0.1:27017/jsonDb";
 var collectionsName = "jsonCol";
 
+
+var msg = {
+	status: 0
+};
+
 app.get('/test/', (req, res) => {
 	var jsonObj = {
 		"key": "test1",
@@ -41,7 +46,7 @@ app.get('/', function (req, res) {
 	// });
 	//res.send(req.query.action);
 	//console.log(req.get());
-	var resStr = '';
+	
 	var key = req.query.key;
 
 	var jsonObj = {
@@ -50,26 +55,35 @@ app.get('/', function (req, res) {
 	console.log("key: " + key);
 	jsonDb("find", collectionsName, jsonObj, (result) => {
 		console.log("请求到的result有" + result.length + "条数据!");
+		var resStr;
 		if (result.length > 0) {
 			console.log("result[0].jsonStr : " + JSON.stringify(result));
 			resStr = result[result.length - 1].jsonStr;
 		} else {
-			resStr = "数据为空";
+			resStr = "no msg";
 		}
-		res.send(resStr);
+		res.jsonp(resStr);
 	});
 })
 //post请求
-app.post('/', urlencodedParser, (req, res) => {
+app.post('/postJson/', urlencodedParser, (req, res) => {
 	console.log("key => " + req.body.key);
 	console.log("json => " + req.body.jsonStr);
+
 	var jsonObj = {
 		key: req.body.key
 	};
 
 	jsonDb("find", collectionsName, jsonObj, (result) => {
 
-		jsonObj.jsonStr = req.body.jsonStr;
+		try {
+			jsonObj.jsonStr = JSON.parse(req.body.jsonStr);
+		} catch (error) {
+			msg.status = -1;
+			msg.msg = "JSON格式有误";
+			return;
+		}
+
 
 		console.log("请求到的result有" + result.length + "调数据!");
 		console.log(JSON.stringify(result[0]));
@@ -79,12 +93,16 @@ app.post('/', urlencodedParser, (req, res) => {
 				{ $set: jsonObj }
 			];
 			jsonDb("update", collectionsName, updateObj, (result) => {
-				res.send("更新成功!!");
+				msg.status = 2;
+				msg.obj = result;
+				res.jsonp(msg);
 			});
 
 		} else {
 			jsonDb("add", collectionsName, jsonObj, (result) => {
-				res.send("提交成功!!");
+				msg.status = 1;
+				msg.obj = result;
+				res.jsonp(msg);
 			});
 		}
 	});

@@ -1,33 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <style>
-        .textArea {
-            display: flex;
-            width: 400px;
-            height: 400px;
-            line-height: 400px;
-        }
-        .submit {
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<link rel="stylesheet" href="libs/bootstrap/css/bootstrap.css">
+	<title>demo</title>
+	<script src="libs/vue/vue.js"></script>
 
-        }
-    </style>
-    <title>Document</title>
+	<style>
+		.container{
+			border: 1px solid #000;
+			background-color: #eee;
+			border-radius: 5px;
+			padding-top: 10px;
+			padding-bottom: 10px;
+		}
+
+		.fl{
+			margin-right: 50px;
+		}
+		.control{
+			margin-bottom: 20px;
+		}
+		.btn-primary{
+			margin-top: 20px;
+		}
+
+	</style>
 </head>
-
 <body>
-    <form action="http://127.0.0.1:8765/" method="POST">
-        输入key:
-        <input type="text" name="key">
-        <br/>
-        输入文本:
-        <input type="text" name="jsonStr" class="textArea">
-        <input type="submit" value="Submit" class="submit">
-    </form>
-</body>
+	<div class="container">
+		<form>
+		  <div class="form-group">
+		    <label for="keyInfo">请输入key:</label>
+		    <input type="text" class="form-control" id="keyInfo" placeholder="key" v-model="keyInfo">
+		  </div>
+		</form>
 
+		<div class="json-info">
+			<div class="form-group">
+			    <label for="jsonInfo">请输入Json串:</label>
+			    <textarea id="jsonInfo" class="form-control" rows="3" v-model="jsonInfo"></textarea>
+		  	</div>
+			<div class="control">
+				<button type="button" class="btn btn-success fl"s>提交</button>
+				<button type="button" class="btn btn-danger fr">清空</button>
+			</div>
+		</div>
+
+		<div class="form-group">
+			    <label for="keyInfo">请访问下方地址获得数据:</label>
+			    <a href="{{url}}" class="btn btn-default btn-lg active btn-block" role="button">{{url}}</a>
+		</div>
+
+		<button type="button" class="btn btn-primary btn-lg" @click="clearDatabase">清空数据库</button>
+	</div>
+
+
+	<script src="libs/jQuery/jquery-3.3.1.js"></script>
+    <script src="libs/bootstrap/js/bootstrap.min.js"></script>
+	<script>
+		new Vue({
+			el: ".container",
+			data: {
+				keyInfo: "key--key",
+				url: "www.baidu.com",
+				jsonInfo: "jsonInfo"
+			},
+			methods: {
+				clearDatabase(){
+					alert("清空");
+				},
+
+			}
+		});
+	</script>
+</body>
 </html>

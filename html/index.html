@@ -6,7 +6,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	<link rel="stylesheet" href="libs/bootstrap/css/bootstrap.css">
-	<title>demo</title>
+	<title>JSON假数据构造</title>
 	<script src="libs/vue/vue.js"></script>
 	<script src="libs/vue/vue-resource.js"></script>
 
@@ -55,7 +55,7 @@
 
 		<div class="form-group">
 			<label for="keyInfo">请访问下方地址获得数据:</label>
-			<a href="{{url}}" class="btn btn-default btn-lg active btn-block" role="button">{{url}}</a>
+			<a target="_blank" :href="url" class="btn btn-default btn-lg active btn-block" role="button">{{url}}</a>
 		</div>
 
 		<button type="button" class="btn btn-primary btn-lg" @click="clearDatabase">清空数据库</button>
@@ -65,21 +65,48 @@
 	<script src="libs/jQuery/jquery-3.3.1.js"></script>
 	<script src="libs/bootstrap/js/bootstrap.min.js"></script>
 	<script>
+		// import Vue from 'vue';
+		// import axios from 'axios';
+		// import VueAxios from 'vue-axios';
+
+		// Vue.use(VueAxios, axios)
 		new Vue({
 			el: ".container",
 			data: {
-				keyInfo: "测试测试",
+				keyInfo: "",
 				url: "www.baidu.com",
-				jsonInfo: "jsonInfo"
+				jsonInfo: '{"data":"Json串测试"}'
 			},
 			methods: {
 				clearDatabase() {
 					alert("清空");
 				},
 				submitJsonInfo: function (ev) {
-					this.$http.get('http://127.0.0.1:8765?key=test')
-						.then(function (res) {
-							alert(res.data);
+					if (this.key.length == 0 || this.jsonInfo.length == 0) {
+						alert("内容不能为空!");
+						return;
+					}
+
+					// this.$http.post('http://211.159.159.113:8765/postJson', {
+					this.$http.post('http://127.0.0.1:8765/postJson', {
+						// 'key': keyInfo,
+						// 'jsonStr': jsonInfo,
+						key: this.keyInfo,
+						jsonStr: this.jsonInfo,
+						headers: {
+							//'Content-Type': 'application/json;charset=UTF-8'
+							//'Content-Type' :'application/x-www-form-urlencoded;charset=UTF-8'
+						}
+					}, {
+							emulateJSON: true
+						}).then(function (res) {
+							if (res.data.status == -1) {
+								alert(res.data.msg);
+							} else {
+								//this.url = "http://127.0.0.1:8765/getJson?key=" + this.keyInfo;
+								this.url = "http://127.0.0.1:8765/getJson?key=" + this.keyInfo;
+							}
+
 						}, function (err) {
 							alert("添加失败!" + JSON.stringify(err));
 						});

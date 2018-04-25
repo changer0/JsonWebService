@@ -9,7 +9,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 var url = "mongodb://127.0.0.1:27017/jsonDb";
 var collectionsName = "jsonCol";
-
+app.use(express.static('html'));
 
 var msg = {
 	status: 0
@@ -35,7 +35,7 @@ app.get('/test/', (req, res) => {
 });
 
 //  主页输出 "Hello World"
-app.get('/', function (req, res) {
+app.get('/getJson/', function (req, res) {
 	console.log("主页 GET 请求:");
 	// var myobj = { name: "这是测试数据XXXXXXXXXXXXX"};
 	// jsonDb("delete", collectionsName, myobj, (result) => {
@@ -69,7 +69,7 @@ app.get('/', function (req, res) {
 app.post('/postJson/', urlencodedParser, (req, res) => {
 	console.log("key => " + req.body.key);
 	console.log("json => " + req.body.jsonStr);
-
+	console.log("body => " + JSON.stringify(req.body));
 	var jsonObj = {
 		key: req.body.key
 	};
@@ -81,6 +81,8 @@ app.post('/postJson/', urlencodedParser, (req, res) => {
 		} catch (error) {
 			msg.status = -1;
 			msg.msg = "JSON格式有误";
+			res.send(msg);
+			console.log("msg: " + JSON.stringify(msg));
 			return;
 		}
 

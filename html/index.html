@@ -5,10 +5,11 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-	<link rel="stylesheet" href="libs/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" href="js/libs/bootstrap/css/bootstrap.css">
 	<title>Json假数据构建</title>
-	<script src="libs/vue/vue.js"></script>
-	<script src="libs/vue/vue-resource.js"></script>
+	<script src="js/libs/vue/vue.js"></script>
+	<script src="js/libs/vue/vue-resource.js"></script>
+	<script src="js/server_url.js"></script>
 
 	<style>
 		.container {
@@ -43,6 +44,15 @@
 			border: #eee;
 			padding-left: 10px;
 		}
+
+		.jsonList {
+			margin-top: 20px;
+			display: flex;
+			flex-direction: column;
+			align-items:flex-start;
+			padding-left: 20%;
+			padding-right: 20%;
+		}
 	</style>
 </head>
 
@@ -53,6 +63,8 @@
 			Json假数据构建
 		</h1>
 	</div>
+
+	<!-- 输入框 -->
 	<div class="container">
 
 		<form>
@@ -80,8 +92,6 @@
 
 		<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#inputPwd">清空数据库</button>
 	</div>
-
-
 
 	<!-- 模态框（Modal） -->
 	<div class="modal fade" id="inputPwd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -112,84 +122,20 @@
 		<!-- /.modal -->
 	</div>
 
+	<!-- 当前已经存在Json列表 -->
+	<div id="jsonList" class="jsonList">
+		当前服务器中的假数据:
+		<br/><br/>
+		<ul>
+			<li v-for="item in jsonList">
+				{{ item.key }} => {{item.jsonStr}}
+			</li>
+		</ul>
+	</div>
 
-
-	<script src="libs/jQuery/jquery-3.3.1.js"></script>
-	<script src="libs/bootstrap/js/bootstrap.min.js"></script>
-	<script>
-		// import Vue from 'vue';
-		// import axios from 'axios';
-		// import VueAxios from 'vue-axios';
-
-		// Vue.use(VueAxios, axios)
-		new Vue({
-			el: '#inputPwd',
-			data: {
-				clearDbPwd:''
-			},
-			methods: {
-				clearDatabase() {
-					//this.$http.post('http://211.159.159.113:8765/delCol'), {
-					this.$http.post('http://127.0.0.1:8765/delCol', {
-						pwd: this.clearDbPwd
-					}, {
-							emulateJSON: true
-						}).then(function (res) {
-							if (res.body.status == 1) {
-								alert("数据库清除成功!");
-							} else {
-								alert(res.body.msg);
-							}
-						});
-				},
-			}
-		});
-		new Vue({
-			el: '.container',
-			data: {
-				keyInfo: "testStr",
-				url: "http://211.159.159.113:8765/",
-				jsonInfo: '{"data":"Json串测试"}'
-			},
-			methods: {
-				clearInfo() {
-					this.keyInfo = '';
-					this.jsonInfo = '';
-				},
-				submitJsonInfo: function (ev) {
-					if (this.keyInfo.length == 0 || this.jsonInfo.length == 0) {
-						alert("内容不能为空!");
-						return;
-					}
-
-					//this.$http.post('http://211.159.159.113:8765/postJson', {
-					this.$http.post('http://127.0.0.1:8765/postJson', {
-						// 'key': keyInfo,
-						// 'jsonStr': jsonInfo,
-						key: this.keyInfo,
-						jsonStr: this.jsonInfo,
-						headers: {
-							//'Content-Type': 'application/json;charset=UTF-8'
-							//'Content-Type' :'application/x-www-form-urlencoded;charset=UTF-8'
-						}
-					}, {
-							emulateJSON: true
-						}).then(function (res) {
-							if (res.body.status == -1) {
-								alert(res.body.msg);
-							} else {
-								//this.url = "http://211.159.159.113:8765/getJson?key=" + this.keyInfo;
-								this.url = "http://127.0.0.1:8765/getJson?key=" + this.keyInfo;
-							}
-
-						}, function (err) {
-							alert("添加失败!" + JSON.stringify(err));
-						});
-				},
-
-			}
-		});
-	</script>
+	<script src="js/libs/jQuery/jquery-3.3.1.js"></script>
+	<script src="js/libs/bootstrap/js/bootstrap.min.js"></script>
+	<script src="js/index.js"></script>
 </body>
 
 </html>

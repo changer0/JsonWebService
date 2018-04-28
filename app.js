@@ -35,8 +35,8 @@ app.get('/test/', (req, res) => {
 });
 
 //  主页输出 "Hello World"
-app.get('/getJson/', function (req, res) {
-	console.log("getJson 请求:");
+app.get('/getJsonToUser/', function (req, res) {
+	console.log("getJsonToUser 请求:");
 	
 	var key = req.query.key;
 
@@ -56,6 +56,26 @@ app.get('/getJson/', function (req, res) {
 		res.jsonp(resStr);
 	});
 })
+
+app.get('/getJson/', function(req, res) {
+	console.log("getJson 请求:");
+	var where = {
+		key: key
+	};
+	var key = req.query.key;
+	if(!key || key.length <= 0) {
+		where = {};
+	}
+	jsonDb("find", collectionsName, where, (result) => {
+		console.log("请求到的result有" + result.length + "条数据!");
+		var resStr;
+		if (result.length > 0) {
+			resStr = result;
+		} 
+		res.send(resStr);
+	});
+})
+
 //post请求
 app.post('/postJson/', urlencodedParser, (req, res) => {
 	console.log("key => " + req.body.key);

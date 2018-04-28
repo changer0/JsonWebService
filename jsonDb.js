@@ -17,7 +17,7 @@ var add = function (db, collections, selector, fn) {
 //delete
 var deletes = function (db, collections, selector, fn) {
   var collection = db.collection(collections);
-  collection.deleteOne(selector, function (err, result) {
+  collection.deleteMany(selector, function (err, result) {
     if (err) throw err;
     fn(result);
     //db.close();
@@ -39,13 +39,6 @@ var find = function (db, collections, selector, fn) {
   });
 
 }
-// //（权限控制） -- 暂时没有用
-// MongoClient.connect(Urls, function (err, db) {
-//   find(db, "powers", null, function (d) {
-//     console.log("123s");
-//     console.log(d.length);
-//   });
-// });
 
 //update
 var updates = function (db, collections, selector, fn) {
@@ -54,6 +47,14 @@ var updates = function (db, collections, selector, fn) {
     if (err) throw err;
     fn(result);
   });
+
+}
+
+var deleteCol = function (db, collections, selector, fn) {
+  var collection = db.collection(collections);
+  collection.drop(function(err, delOK) {  // 执行成功 delOK 返回 true，否则返回 false
+    fn(err, delOK);
+});
 
 }
 
@@ -70,14 +71,8 @@ var methodType = {
   // usershow: find,
   // getcategory: find,
   // getcourse: find,
-  find: find
-  // state: find,
-  // top: find,
-  // AddDirectory: find,
-  // updateDirectory: updates,
-  // deleteDirectory: deletes,
-  // showlist: find,
-  // showdir: find
+  find: find,
+  deleteCol: deleteCol
 };
 //主逻辑
 module.exports = function (action,collections, selector, callback) {

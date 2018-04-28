@@ -36,16 +36,7 @@ app.get('/test/', (req, res) => {
 
 //  主页输出 "Hello World"
 app.get('/getJson/', function (req, res) {
-	console.log("主页 GET 请求:");
-	// var myobj = { name: "这是测试数据XXXXXXXXXXXXX"};
-	// jsonDb("delete", collectionsName, myobj, (result) => {
-	// 	console.log("删除完成");
-	// });
-	// jsonDb("find", collectionsName, {}, (result) => {
-	// 	res.send(JSON.stringify(result));
-	// });
-	//res.send(req.query.action);
-	//console.log(req.get());
+	console.log("getJson 请求:");
 	
 	var key = req.query.key;
 
@@ -92,7 +83,7 @@ app.post('/postJson/', urlencodedParser, (req, res) => {
 		if (result.length > 0) {
 			var updateObj = [
 				result[0],
-				{ $set: jsonObj }
+				{ $set: jsonObj }//这个地方非常关键!!!
 			];
 			jsonDb("update", collectionsName, updateObj, (result) => {
 				msg.status = 2;
@@ -111,6 +102,33 @@ app.post('/postJson/', urlencodedParser, (req, res) => {
 
 });
 
+app.post('/delCol/', urlencodedParser, (req, res) => {
+	console.log("pwd => " + req.body.pwd);
+	if(req.body.pwd == '1210') {
+		jsonDb('deleteCol', collectionsName, {}, (err, delOk) => {
+			if(err) {
+				if(err.message == 'ns not found') {
+					msg.status = -1;
+					msg.msg = "已经删除过数据库!";
+				}
+			} else {
+				if(delOk) {
+					msg.status = 1;
+				} else {
+					msg.status = -1;
+					msg.msg = err.message;
+				}
+			}
+			res.send(msg);
+		});
+	} else {
+		msg.status = -1;
+		msg.msg = '密码不正确';
+		res.send(msg);
+	}
+
+	
+});
 
 
 

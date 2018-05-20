@@ -11,7 +11,7 @@ function getRootUrl(){
     if(isDebug) {
         temp = 'http://127.0.0.1:8765/';
     } else {
-        temp = 'http://211.159.159.113:8765/';
+        temp = 'http://www.zhanglulu/json/';
     }
     return temp;
 }
